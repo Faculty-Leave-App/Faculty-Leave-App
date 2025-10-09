@@ -13,52 +13,59 @@ jobs:
   build:
     runs-on: ubuntu-latest
     permissions:
-      contents: read #This is required for actions/checkout
+      contents: read # Required for actions/checkout
 
     steps:
+      # 1️⃣ Checkout the code
       - uses: actions/checkout@v4
 
-      - name: Set up Node.js version
+      # 2️⃣ Set up Node.js
+      - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
           node-version: '22.x'
 
-      - name: npm install, build, and test
+      # 3️⃣ Install dependencies and build
+      - name: Install dependencies and build
         run: |
           npm install
-          npm run build 
+          npm run build
           npm run test --if-present
+        working-directory: Faculty-Leave-App/Faculty-Leave-App  # folder containing package.json
 
-      - name: Upload artifact for deployment job
+      # 4️⃣ Upload build output as artifact
+      - name: Upload build artifact
         uses: actions/upload-artifact@v4
         with:
           name: vite-dist
-          path: dist
+          path: Faculty-Leave-App/Faculty-Leave-App/dist  # upload actual build output
 
+      # 5️⃣ Debug step to verify files (optional)
       - name: List files to verify
-        run: ls -R dist
+        run: ls -R Faculty-Leave-App/Faculty-Leave-App/dist
 
   deploy:
     runs-on: ubuntu-latest
     needs: build
-    
+
     steps:
+      # 1️⃣ Download the build artifact
       - name: Download artifact from build job
         uses: actions/download-artifact@v4
         with:
           name: vite-dist
-          path: dist
-      
-      - name: 'Deploy to Azure Web App'
+          path: dist   # local folder to download artifact
+
+      # 2️⃣ Debug step to verify files (optional)
+      - name: List files to verify
+        run: ls -R dist
+
+      # 3️⃣ Deploy contents of dist/ to Azure Web App
+      - name: Deploy to Azure Web App
         id: deploy-to-webapp
         uses: azure/webapps-deploy@v3
         with:
           app-name: 'LeaveDeskWeb'
           slot-name: 'Production'
-          package: dist
+          package: 'dist/*'  # ✅ deploy contents, not the folder
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_5E277B4FD7E34C7895414605667C888C }}
-
-
-
-
-
