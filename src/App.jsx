@@ -1,8 +1,8 @@
 import React from 'react';
 import { Routes, Route, Link } from 'react-router-dom';
 import Login from './components/login';
-import Profile from './components/Profile';
-import LeaveForm from './components/LeaveForm';
+import Profile from './components/profile';
+import LeaveForm from './components/leaveForm';
 import { useMsal } from '@azure/msal-react';
 
 
