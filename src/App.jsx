@@ -20,7 +20,6 @@ return (
 {signedIn && <Link to="/profile">Profile</Link>}
 {signedIn && <Link to="/leave">Request Leave</Link>}
 <Link to="/login">{signedIn ? 'Switch User' : 'Login'}</Link>
-<button>start</button>
 </div>
 </nav>
 
