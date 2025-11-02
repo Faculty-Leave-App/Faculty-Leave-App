@@ -5,6 +5,7 @@ import Profile from './components/profile';
 import LeaveForm from './components/leaveForm';
 import { useMsal } from '@azure/msal-react';
 import './App.css';
+import Chatbot from './Chatbot';
 
 export default function App() {
   const { accounts } = useMsal();
@@ -32,6 +33,7 @@ export default function App() {
           <Route path="/leave" element={<LeaveForm />} />
         </Routes>
       </div>
+      <Chatbot />
     </div>
   );
 }
