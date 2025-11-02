@@ -14,23 +14,23 @@ app.use(cors());
 app.use(bodyParser.json());
 
 const aiClient = new AzureOpenAI({
-    apiKey: "6053OsBGMAHDZZeU0sCoyGlwhB0sWHH3nJ3Ly98jNv3KZzjYfbuAJQQJ99BKACF24PCXJ3w3AAAAACOG6qeW", 
+    apiKey: process.env.OPEN_API_KEY, 
     apiVersion: "2024-05-01-preview",
     endpoint: "https://facultyleavegenaiservice.services.ai.azure.com/models/chat/completions?api-version=2024-05-01-preview"
 });
 
 // ✅ Serve frontend (Vite build output)
-app.use(express.static(path.join(__dirname, "dist")));
+app.use(express.static(path.join(__dirname, "..", "dist")));
 app.get("/", (req, res) => {
-  res.sendFile(path.join(__dirname, "dist", "index.html"));
+  res.sendFile(path.join(__dirname, "..", "dist", "index.html"));
 });
 
 // ✅ Azure SQL config
 const dbConfig = {
-  user: "sqladmin",
-  password: "Sql@1234",
-  server: "facultyleave-sql-server.database.windows.net",
-  database: "FacultyLeaveDB",
+  user: process.env.DB_USER,
+  password: process.env.DB_PASSWORD,
+  server: process.env.DB_SERVER,
+  database: process.env.DB_DATABASE,
   options: { encrypt: true },
 };
 
@@ -175,5 +175,6 @@ app.post('/api/chat', async (req, res) => {
 // ✅ Start server (Azure will assign port dynamically)
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`✅ Server running on port ${PORT}`));
+
 
 
