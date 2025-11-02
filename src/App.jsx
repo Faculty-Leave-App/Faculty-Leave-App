@@ -5,7 +5,7 @@ import Profile from './components/profile';
 import LeaveForm from './components/leaveForm';
 import { useMsal } from '@azure/msal-react';
 import './App.css';
-import Chatbot from './Chatbot';
+import Chatbot from './Chatbot.jsx';
 
 export default function App() {
   const { accounts } = useMsal();
