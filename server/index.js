@@ -4,6 +4,7 @@ import cors from "cors";
 import sql from "mssql";
 import path from "path";
 import { fileURLToPath } from "url";
+import { AzureOpenAI } from 'openai';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -11,6 +12,12 @@ const __dirname = path.dirname(__filename);
 const app = express();
 app.use(cors());
 app.use(bodyParser.json());
+
+const aiClient = new AzureOpenAI({
+    apiKey: "6053OsBGMAHDZZeU0sCoyGlwhB0sWHH3nJ3Ly98jNv3KZzjYfbuAJQQJ99BKACF24PCXJ3w3AAAAACOG6qeW", 
+    apiVersion: "2024-05-01-preview",
+    endpoint: "https://facultyleavegenaiservice.services.ai.azure.com/models/chat/completions?api-version=2024-05-01-preview"
+});
 
 // ✅ Serve frontend (Vite build output)
 app.use(express.static(path.join(__dirname, "dist")));
@@ -128,6 +135,44 @@ app.post("/api/leave", async (req, res) => {
   }
 });
 
+// ⬇️ 3. ADD THIS NEW CHATBOT ENDPOINT
+app.post('/api/chat', async (req, res) => {
+    try {
+        const { message } = req.body;
+
+        if (!message) {
+            return res.status(400).json({ error: 'Message is required' });
+        }
+
+        const response = await aiClient.chat.completions.create({
+            model: "Phi-4", 
+            messages: [
+                // ✅ Use the detailed playground instructions
+                {"role": "system", "content": `
+                    You are a polite and helpful assistant for the Faculty Leave Management System. 
+                    Your job is to help faculty apply for leave. You must collect four pieces of information:
+                    1. The start date of the leave.
+                    2. The end date of the leave.
+                    3. The type of leave (e.g., Casual Leave, Sick Leave, On-Duty).
+                    4. A brief reason.
+
+                    Be conversational. Do not ask for all four things at once. Ask one question at a time. 
+                    When you have all four, confirm the details with the user and say "I am now submitting this for approval."
+                `},
+                {"role": "user", "content": message}
+            ]
+        });
+
+        const aiReply = response.choices[0].message.content;
+        res.json({ reply: aiReply });
+
+    } catch (err) {
+        console.error('AI Chat Error:', err);
+        res.status(500).json({ error: 'Error communicating with AI service' });
+    }
+});
+
 // ✅ Start server (Azure will assign port dynamically)
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`✅ Server running on port ${PORT}`));
+
