@@ -2,7 +2,7 @@ import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import path from 'path'
 
-// ✅ Recommended Vite config for fullstack (React + Node/Express) apps
+// ✅ Recommended Vite config for fullstack (React + Node/Express) apps 
 export default defineConfig({
   plugins: [react()],
   build: {
