@@ -66,5 +66,5 @@ jobs:
         with:
           app-name: 'LeaveDeskWeb'  # must match your Azure Web App name
           slot-name: 'Production'
-          package: .
+          package: ./server
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_5E277B4FD7E34C7895414605667C888C }}
