@@ -16,7 +16,7 @@ app.use(bodyParser.json());
 const aiClient = new AzureOpenAI({
     apiKey: process.env.OPEN_API_KEY, 
     apiVersion: "2024-05-01-preview",
-    endpoint: "https://facultyleavegenaiservice.services.ai.azure.com/models/chat/completions?api-version=2024-05-01-preview"
+    endpoint: "https://facultyleavegenaiservice.services.ai.azure.com"
 });
 
 // ✅ Serve frontend (Vite build output)
